@@ -176,6 +176,14 @@ if (DEFINED WITH_SSCP_COMPILER)
 else()
   find_package(OpenCL QUIET)
 endif()
+# Use pkg-config to find pocl
+if (NOT OpenCL_FOUND)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(pocl REQUIRED pocl)
+  if (pocl_FOUND)
+    set(OpenCL_FOUND TRUE)
+  endif()
+endif()
 
 # In case HIP is not found via the cmake pkgs we fall back to the legacy rocm discovery:
 if (NOT HIP_FOUND)
@@ -214,6 +222,15 @@ endif()
 if(WITH_OPENCL_BACKEND)
   if(NOT OpenCL_FOUND)
     message(SEND_ERROR "OpenCL was not found")
+  endif()
+endif()
+# Some mainstream OpenCL implementations like PoCL use
+# pkg-config to set its path.
+if (NOT OpenCL_FOUND)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(pocl REQUIRED pocl)
+  if (pocl_FOUND)
+    set(OpenCL_FOUND TRUE)
   endif()
 endif()
 

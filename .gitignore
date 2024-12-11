@@ -52,3 +52,6 @@ build*/
 
 # clangd cache
 .cache
+
+# cmake command
+build_cmd.sh

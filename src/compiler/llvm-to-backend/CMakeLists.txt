@@ -138,11 +138,17 @@ if(WITH_SSCP_COMPILER)
     set(LLVMSPIRV_RELATIVE_PATH ${LLVMSPIRV_RELATIVE_INSTALLDIR}/bin/llvm-spirv)
 
     include(FetchContent)
-    FetchContent_Declare(LLVMSpirvTranslator
-      GIT_REPOSITORY https://github.com/KhronosGroup/SPIRV-LLVM-Translator
-      GIT_TAG origin/${LLVMSPIRV_BRANCH}
-      GIT_SHALLOW ON
-    )
+    if (NOT LLVM_SPIRVTRANS)
+      FetchContent_Declare(LLVMSpirvTranslator
+        GIT_REPOSITORY https://github.com/KhronosGroup/SPIRV-LLVM-Translator
+        GIT_TAG origin/${LLVMSPIRV_BRANCH}
+        GIT_SHALLOW ON
+      )
+    else()
+      message(STATUS "SPIRV-Translator is added manully ${LLVM_SPIRVTRANS}")
+      FetchContent_Declare(LLVMSpirvTranslator
+        URL                ${LLVM_SPIRVTRANS})
+    endif()
 
     FetchContent_GetProperties(LLVMSpirvTranslator)
     if(NOT LLVMSpirvTranslator_POPULATED)
